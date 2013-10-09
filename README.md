@@ -1,0 +1,2 @@
+openoffice-init-script
+======================
