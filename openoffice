@@ -8,7 +8,7 @@
 # Author: Vic Vijayakumar
 # Modified by Federico Ch. Tomasczik
 # Modified by Gervais de Montbrun -> October 9, 2013
-#  Tested with LibreOffice 3.5 on Ubuntu 12.04.3 LTS
+## Tested with LibreOffice 3.5 on Ubuntu 12.04.3 LTS
 ## Ubuntu has dropped openoffice.org-headless package
 
 OOo_HOME=/usr/bin
