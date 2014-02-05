@@ -25,7 +25,7 @@ case "$1" in
      exit
     fi
     echo "Starting OpenOffice headless server"
-    $SOFFICE_PATH --headless --nologo --nofirststartwizard --accept="socket,host=127.0.0.1,port=8100;urp" & > /dev/null 2>&1
+    /bin/su - www-data -c "$SOFFICE_PATH --headless --nologo --nofirststartwizard --accept=\"socket,host=127.0.0.1,port=8100;urp\"" & > /dev/null 2>&1
     touch $PIDFILE
 ;;
 
