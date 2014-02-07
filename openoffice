@@ -1,54 +1,61 @@
 #!/bin/bash
 # openoffice.org headless server script
 #
-# chkconfig: 2345 80 30
-# description: headless openoffice server script
-# processname: openoffice
-#
 # Author: Vic Vijayakumar
 # Modified by Federico Ch. Tomasczik
-# Modified by Gervais de Montbrun -> October 9, 2013
+# Vastly Modified by Gervais de Montbrun -> February 2014
 ## Tested with LibreOffice 3.5 on Ubuntu 12.04.3 LTS
 ## Ubuntu has dropped openoffice.org-headless package
+## CentOS by default does not allow apache user to have a shell
+## If you want this to work on CentOS, then:
+###  sed -i "s|apache:x:48:48:Apache:/var/www:/sbin/nologin|apache:x:48:48:Apache:/var/www:/bin/sh|" /etc/passwd
+###  sed -i "s|www-data|apache|g" /etc/init.d/openoffice
+#
+# it's a service!
+### BEGIN INIT INFO
+# chkconfig: 2345 80 30
+# processname: openoffice
+# Provides: openoffice headless
+# Required-Start: $all
+# Required-Stop: $all
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Start openoffice-headless at boot.
+# Description: headless openoffice server script
+### END INIT INFO
 
 OOo_HOME=/usr/bin
 SOFFICE_PATH=$OOo_HOME/soffice
-PIDFILE=/var/run/openoffice-server.pid
+PID_SEARCH="pgrep -nf $SOFFICE_PATH"
 
 set -e
 
 case "$1" in
   start)
-    if [ -f $PIDFILE ]; then
+    if [ `$PID_SEARCH` ]; then
      echo "OpenOffice headless server has already started."
-     sleep 5
-     exit
+    else
+      echo "Starting OpenOffice headless server"
+      /bin/su - www-data -c "$SOFFICE_PATH --headless --nologo --nofirststartwizard --accept=\"socket,host=127.0.0.1,port=8100;urp\"" & > /dev/null 2>&1
     fi
-    echo "Starting OpenOffice headless server"
-    /bin/su - www-data -c "$SOFFICE_PATH --headless --nologo --nofirststartwizard --accept=\"socket,host=127.0.0.1,port=8100;urp\"" & > /dev/null 2>&1
-    touch $PIDFILE
-;;
+  ;;
 
   stop)
-    if [ -f $PIDFILE ]; then
-     echo "Stopping OpenOffice headless server."
-     killall -9 soffice.bin
-     rm -f $PIDFILE
-     exit
+    if [ `$PID_SEARCH` ]; then
+      echo "Stopping OpenOffice headless server."
+      killall -9 soffice.bin
+    else
+      echo "Openoffice headless server is not running."
     fi
-    echo "Openoffice headless server is not running."
-    exit
-;;
+  ;;
 
-status)
- PID=`$PID_SEARCH`
-
-  if [ -f $PIDFILE ]; then
-    echo "There's a pid file there so LibreOffice *should* be running"
-  else
-    echo "LibreOffice is not currently running, you can start it with $0 start"
-  fi
-;;
+  status)
+    if [ `$PID_SEARCH` ]; then
+      echo "OpenOffice headless is running"
+    else
+      echo "OpenOffice headless is not currently running, you can start it with $0 start"
+    fi
+  ;;
 
 restart) $0 stop ; $0 start ;;
 status) status ;;
