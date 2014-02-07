@@ -52,8 +52,10 @@ case "$1" in
   status)
     if [ `$PID_SEARCH` ]; then
       echo "OpenOffice headless is running"
+      exit 0
     else
       echo "OpenOffice headless is not currently running, you can start it with $0 start"
+      exit 1
     fi
   ;;
 
