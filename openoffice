@@ -4,12 +4,9 @@
 # Author: Vic Vijayakumar
 # Modified by Federico Ch. Tomasczik
 # Vastly Modified by Gervais de Montbrun -> February 2014
+# Slightly changed by Luke Taylor -> Jan.2016
 ## Tested with LibreOffice 3.5 on Ubuntu 12.04.3 LTS
 ## Ubuntu has dropped openoffice.org-headless package
-## CentOS by default does not allow apache user to have a shell
-## If you want this to work on CentOS, then:
-###  sed -i "s|apache:x:48:48:Apache:/var/www:/sbin/nologin|apache:x:48:48:Apache:/var/www:/bin/sh|" /etc/passwd
-###  sed -i "s|www-data|apache|g" /etc/init.d/openoffice
 #
 # it's a service!
 ### BEGIN INIT INFO
@@ -36,7 +33,7 @@ case "$1" in
      echo "OpenOffice headless server has already started."
     else
       echo "Starting OpenOffice headless server"
-      /bin/su - www-data -c "$SOFFICE_PATH --headless --nologo --nofirststartwizard --accept=\"socket,host=127.0.0.1,port=8100;urp\"" & > /dev/null 2>&1
+      /bin/su - openoffice -c "$SOFFICE_PATH --headless --nologo --nofirststartwizard --accept=\"socket,host=127.0.0.1,port=8100;urp\"" & > /dev/null 2>&1
     fi
   ;;
 
