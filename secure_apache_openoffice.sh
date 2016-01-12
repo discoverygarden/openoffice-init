@@ -5,6 +5,6 @@ if [ -f /etc/init.d/openoffice ]; then
 	service openoffice stop
 	usermod --shell /bin/false $APACHE_USER
 	sed -i "s|$APACHE_USER|openoffice|g" /etc/init.d/openoffice
-	useradd -m -d /home/openoffice -s /bin/sh openoffice
+	useradd -m -d /home/openoffice -s /bin/bash openoffice
         service openoffice start
 fi
