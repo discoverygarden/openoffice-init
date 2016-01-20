@@ -42,7 +42,8 @@ case "$1" in
       echo "Stopping OpenOffice headless server."
       killall -9 soffice.bin
     else
-c
+      echo "Openoffice headless server is not running."
+    fi
   ;;
 
   status)
