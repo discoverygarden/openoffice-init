@@ -4,7 +4,8 @@ APACHE_USER=www-data
 if [ -f /etc/init.d/openoffice ]; then
 	service openoffice stop
 	usermod --shell /bin/false $APACHE_USER
-	sed -i "s|$APACHE_USER|openoffice|g" /etc/init.d/openoffice
-	useradd -m -d /home/openoffice -s /bin/bash openoffice
+        rm -f /etc/init.d/openoffice
+        cd /etc/init.d && wget --no-check-certificate https://raw.github.com/discoverygarden/openoffice-init-script/master/openoffice && chmod a+x openoffice
+	useradd -m -d /home/openoffice -s /bin/false openoffice
         service openoffice start
 fi
