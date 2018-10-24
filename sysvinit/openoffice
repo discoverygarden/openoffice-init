@@ -36,7 +36,7 @@ case "$1" in
       echo "Starting OpenOffice headless server"
       /bin/su - $SOFFICE_USER -s /bin/bash -c "$SOFFICE_PATH --headless --nologo --nofirststartwizard --accept=\"socket,host=127.0.0.1,port=8100;urp\"" & > /dev/null 2>&1
     fi
-  ;;
+    ;;
 
   stop)
     if [ `$PID_SEARCH` ]; then
@@ -45,7 +45,7 @@ case "$1" in
     else
       echo "Openoffice headless server is not running."
     fi
-  ;;
+    ;;
 
   status)
     if [ `$PID_SEARCH` ]; then
@@ -55,13 +55,18 @@ case "$1" in
       echo "OpenOffice headless is not currently running, you can start it with $0 start"
       exit 1
     fi
-  ;;
+    ;;
 
-restart) $0 stop ; $0 start ;;
-status) status ;;
+  restart)
+    $0 stop ; $0 start
+    ;;
 
-*)
-  echo "Usage: $0 {start|stop|restart|status}"
-  exit 1
+  status)
+    status
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop|restart|status}"
+    exit 1
 esac
 exit 0
