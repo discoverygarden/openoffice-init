@@ -1,0 +1,15 @@
+# Systemd unit file for OpenOffice
+
+[Unit]
+Description=OpenOffice headless service
+After=syslog.target network.target
+
+[Service]
+Type=simple
+User=apache
+ExecStart=/bin/bash -c "/usr/bin/soffice --headless --nologo --nofirststartwizard --accept=\"socket,host=127.0.0.1,port=8100;urp\"" &
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
