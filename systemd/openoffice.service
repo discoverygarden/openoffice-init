@@ -5,6 +5,8 @@ Description=OpenOffice headless service
 After=syslog.target network.target
 
 [Service]
+Environment="HOME=/tmp/openoffice"
+
 Type=simple
 User=apache
 ExecStart=/bin/bash -c "/usr/bin/soffice --headless --nologo --nofirststartwizard --accept=\"socket,host=127.0.0.1,port=8100;urp\"" &
