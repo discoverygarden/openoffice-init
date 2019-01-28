@@ -24,9 +24,21 @@
 OOo_HOME=/usr/bin
 SOFFICE_PATH=$OOo_HOME/soffice
 SOFFICE_USER=www-data
+SOFFICE_USER_HOME=/tmp/openoffice
 PID_SEARCH="pgrep -nf $SOFFICE_PATH"
 
 set -e
+
+# check for root status
+if [ $EUID -ne 0 ]; then
+  echo "You need to run this script as root"
+  echo "Try sudo $0"
+  exit 1
+fi
+
+# Ensure home dir exists and is writable to SOFFICE_USER
+test -d $SOFFICE_USER_HOME || mkdir -p $SOFFICE_USER_HOME
+/bin/su -p - $SOFFICE_USER -s /bin/bash -c "HOME=$SOFFICE_USER_HOME test -w $SOFFICE_USER_HOME" || chown -R $SOFFICE_USER:$SOFFICE_USER $SOFFICE_USER_HOME
 
 case "$1" in
   start)
@@ -34,7 +46,7 @@ case "$1" in
      echo "OpenOffice headless server has already started."
     else
       echo "Starting OpenOffice headless server"
-      /bin/su - $SOFFICE_USER -s /bin/bash -c "$SOFFICE_PATH --headless --nologo --nofirststartwizard --accept=\"socket,host=127.0.0.1,port=8100;urp\"" & > /dev/null 2>&1
+      /bin/su -p - $SOFFICE_USER -s /bin/bash -c "HOME=$SOFFICE_USER_HOME $SOFFICE_PATH --headless --nologo --nofirststartwizard --accept=\"socket,host=127.0.0.1,port=8100;urp\"" & > /dev/null 2>&1
     fi
     ;;
 
